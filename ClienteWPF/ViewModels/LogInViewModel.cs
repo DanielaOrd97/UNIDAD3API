@@ -1,4 +1,5 @@
 ﻿using ClienteWPF.Models.DTOs;
+using ClienteWPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 //using Microsoft.EntityFrameworkCore;
@@ -15,25 +16,43 @@ namespace ClienteWPF.ViewModels
         [ObservableProperty]
         private LogInDTO login;
 
+        [ObservableProperty]
+        private bool? esAdmin;
 
+        private string error;
+        public string Error
+        {
+            get => error;
+            set => SetProperty(ref error, value);
+        }
+
+        APIService service;
         public MainViewModel Mainviewmodel { get; }
 
         public LogInViewModel(MainViewModel mainviewm)
         {
-            //service = new();
-            Login = new LogInDTO();
+            service = new();
             Mainviewmodel = mainviewm;
+            Login = new LogInDTO();
         }
 
         [RelayCommand]
         public async Task LogInn()
         {
-
             if (Login != null)
             {
-                // var response = await service.LogIn(Login);
-                Mainviewmodel.NavegarActividades();
-                //Mainviewmodel.Modo = "actividades";
+                var response = await service.LogIn(Login);
+
+                 if(response.Errores == null)
+                 {
+                    esAdmin = response.EsAdmin;
+                    Mainviewmodel.NavegarActividades();
+                 }
+                else
+                {
+                    Error = response.Errores;
+                }
+                
             }
         }
     }

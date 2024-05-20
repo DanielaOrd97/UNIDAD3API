@@ -15,7 +15,6 @@ namespace ClienteWPF.ViewModels
         private readonly LogInViewModel loginviewmodel;
         private readonly ActividadesViewModel actviewmodel;
 
-        //public static string Modo { get; set; }
         private string modo;
         public string Modo
         {

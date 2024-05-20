@@ -42,7 +42,9 @@
                     <TextBlock FontFamily="../Assets/#Gotham"
                         Margin="0 0 0 5">Usuario</TextBlock>
                     <TextBox Template="{StaticResource TextBoxBaseControlTemplate}"
-                      VerticalContentAlignment="Center"></TextBox>
+                      VerticalContentAlignment="Center"
+                             Text="{Binding Login.Username}"
+                             ></TextBox>
 
                     <TextBlock FontFamily="../Assets/#Gotham"
                         Margin="0 15 0 5">Contraseña</TextBlock>
@@ -56,6 +58,11 @@
                      Style="{DynamicResource RoundCorner}"
                                Command="{Binding LogInnCommand}"
                             >Ingresar</Button>
+
+
+                    <TextBlock TextAlignment="Center" Margin="0,5,0,0"
+                               Text="{Binding Error}"
+                               ></TextBlock>
                 </StackPanel>
             </Border>
         </Grid>
