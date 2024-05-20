@@ -52,6 +52,12 @@ namespace ClienteWPF.Repositories
             return context.Find<Actividades>(id);
         }
 
+        public IEnumerable<Actividades> GetAll()
+        {
+            return context.Actividades.Include(x => x.IdDepartamentoNavigation)
+                .ThenInclude(x => x.IdSuperiorNavigation).Where(x => x.Estado == 0 ||  x.Estado == 1);
+        }
+
         public void Update(Actividades act)
         {
             context.Update(act);

@@ -37,6 +37,25 @@ namespace ClienteWPF.ViewModels
 
         public List<Estado> Estados => Enum.GetValues(typeof(Estado)).Cast<Estado>().ToList();
         public ObservableCollection<ActividadDTO> ListaActividades { get; set; } = new();
+        public ObservableCollection<ActividadDTO> ListaActividades1 { get; set; } = new();
+
+
+        //private ObservableCollection<ActividadDTO> listaActividadesB = new();
+        //public ObservableCollection<ActividadDTO> ListaActividadesB
+        //{
+        //    get => listaActividadesB;
+        //    set => SetProperty(ref listaActividadesB, value);
+        //}
+
+        //private ObservableCollection<ActividadDTO> listaActividadesP = new();
+        //public ObservableCollection<ActividadDTO> ListaActividadesP
+        //{
+        //    get => listaActividadesP;
+        //    set => SetProperty(ref listaActividadesP, value);
+        //}
+
+
+
 
         private string modo;
         public string Modo
@@ -61,10 +80,59 @@ namespace ClienteWPF.ViewModels
             //Modo = "inicio";
         }
 
+        //[RelayCommand]
+        //public async Task GetAllActividades()
+        //{
+        //    //ListaActividades.Clear();
+        //    ListaActividadesB.Clear();
+        //    ListaActividadesP.Clear();
+
+        //    var response = await service.GetAllActividades();
+
+        //    var nuevasActividadesB = new ObservableCollection<ActividadDTO>();
+        //    var nuevasActividadesP = new ObservableCollection<ActividadDTO>();
+
+        //    foreach (var actividad in response)
+        //    {
+        //        if (actividad.Imagen != null)
+        //        {
+        //            byte[] imageBytes = Convert.FromBase64String(actividad.Imagen);
+        //            using (var stream = new MemoryStream(imageBytes))
+        //            {
+        //                BitmapImage bitmapImage = new();
+        //                bitmapImage.BeginInit();
+        //                bitmapImage.StreamSource = stream;
+        //                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+        //                bitmapImage.EndInit();
+        //                bitmapImage.Freeze();
+        //                actividad.Img = bitmapImage;
+        //            }
+        //        }
+        //        if (actividad.Estado == 0)
+        //        {
+        //            nuevasActividadesB.Add(actividad);
+        //        }
+        //        else if(actividad.Estado == 1)
+        //        {
+        //            nuevasActividadesP.Add(actividad);
+        //        }
+        //    }
+        //    ListaActividadesB = nuevasActividadesB;
+        //    ListaActividadesP = nuevasActividadesP;
+        //}
+
         [RelayCommand]
         public async Task GetActividades(string estado)
         {
-            ListaActividades.Clear();
+            if(estado == "Borrador")
+            {
+                ListaActividades.Clear();
+            }
+            else
+            {
+                ListaActividades1.Clear();
+            }
+
 
             foreach (var actividad in await service.GetActividades(estado))
             {
@@ -82,8 +150,15 @@ namespace ClienteWPF.ViewModels
                         actividad.Img = bitmapImage;
                     }
                 }
-
-                ListaActividades.Add(actividad);
+                if(actividad.Estado == 0)
+                {
+                    ListaActividades.Add(actividad);
+                }
+                else if(actividad.Estado == 1)
+                {
+                    ListaActividades1.Add(actividad);
+                }
+               
             }
         }
 
@@ -96,6 +171,7 @@ namespace ClienteWPF.ViewModels
         [RelayCommand]
         public void RegresarVista()
         {
+            Actividad = null;
             Modo = "regresar";
         }
 
@@ -109,6 +185,42 @@ namespace ClienteWPF.ViewModels
                 await service.AgregarActividad(Actividad);
 
                 StatusId = Actividad.Estado;
+
+                switch (StatusId)
+                {
+                    case 0:
+                        StatusAct = "Borrador";
+                        break;
+                    case 1:
+                        StatusAct = "Publicadas";
+                        break;
+                    case 2:
+                        StatusAct = "Eliminadas";
+                        break;
+                }
+
+                GetActividades(StatusAct);
+                Modo = "regresar";
+            }
+        }
+
+
+        [RelayCommand]
+        public void VerEditar()
+        {
+            Modo = "editar";
+        }
+
+
+
+        [RelayCommand]
+        public async Task EditarActividad(ActividadDTO dto)
+        {
+            if (dto != null)
+            {
+                dto.Estado = (int)SelectedEstado;
+                await service.ActualizarActividad(dto);
+                StatusId = dto.Estado;
 
                 switch (StatusId)
                 {

@@ -1,5 +1,6 @@
 ﻿using ClienteWPF.Models.DTOs;
 using ClienteWPF.Repositories;
+using ClienteWPF.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace ClienteWPF.Services
         {
             cliente = new()
             {
-                BaseAddress = new Uri("https://localhost:44326/api/")
+                 BaseAddress = new Uri("https://localhost:44326/api/")
+                //BaseAddress = new Uri("https://actividadesequipo8.websitos256.com/api/")
             };
 
             Rep = new ActividadesRepository();
@@ -127,6 +129,62 @@ namespace ClienteWPF.Services
             return actividadeslista;
         }
 
+        public async Task<List<ActividadDTO>> GetAllActividades()
+        {
+            List<ActividadDTO> actividadeslista = new();
+
+
+            if (string.IsNullOrEmpty(Token))
+            {
+                throw new InvalidOperationException("Usuario no autenticado.");
+            }
+
+            try
+            {
+                cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+                var response = await cliente.GetAsync($"actividades");
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                var actividades = JsonConvert.DeserializeObject<List<ActividadDTO>>(jsonResponse);
+
+                if (actividades != null)
+                {
+                    foreach (ActividadDTO act in actividades)
+                    {
+                        //var entidad = Rep.Get(act.Id);
+                        var entidad = Rep.Get((int)act.Id);
+
+                        if (entidad != null)
+                        {
+                            ActividadDTO dto = new()
+                            {
+                                Id = act.Id,
+                                Titulo = act.Titulo,
+                                Descripcion = act.Descripcion,
+                                IdDepartamento = act.IdDepartamento,
+                                NombreDepto = act.NombreDepto,
+                                FechaDeRealizacion = act.FechaDeRealizacion,
+                                FechaDeCreacion = act.FechaDeCreacion,
+                                Estado = act.Estado,
+                                Imagen = act.Imagen
+                            };
+
+
+                            actividadeslista.Add(dto);
+                        }
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return actividadeslista;
+        }
+
         public async Task AgregarActividad(ActividadDTO dto)
         {
             //if (string.IsNullOrEmpty(Token))
@@ -167,6 +225,81 @@ namespace ClienteWPF.Services
             }
         }
 
+        public async Task ActualizarActividad(ActividadDTO dto)
+        {
+            if (dto != null)
+            {
+                if (string.IsNullOrEmpty(Token))
+                {
+                    throw new InvalidOperationException("Usuario no autenticado.");
+                }
 
+                cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+                try
+                {
+                    var response = await cliente.PutAsJsonAsync($"actividades/EditarActividad/{dto.Id}", dto);
+
+                    if (response != null && response.IsSuccessStatusCode)
+                    {
+                        var entidad = Rep.Get((int)dto.Id);
+
+                        if (entidad != null)
+                        {
+                            if (dto.Titulo != entidad.Titulo || dto.Descripcion != entidad.Descripcion || dto.FechaDeRealizacion != entidad.FechaRealizacion)
+                            {
+
+                                if(dto.Estado != entidad.Estado)
+                                {
+                                    Est = entidad.Estado;
+
+                                    switch (Est)
+                                    {
+                                        case 0:
+                                            EstadoText = "Borrador";
+                                            break;
+                                        case 1:
+                                            EstadoText = "Publicadas";
+                                            break;
+                                        case 2:
+                                            EstadoText = "Eliminadas";
+                                            break;
+                                    }
+
+                                    await GetActividades(EstadoText);
+                                }
+
+                                Rep.Update(entidad);
+
+                                Est = dto.Estado;
+
+                                switch (Est)
+                                {
+                                    case 0:
+                                        EstadoText = "Borrador";
+                                        break;
+                                    case 1:
+                                        EstadoText = "Publicadas";
+                                        break;
+                                    case 2:
+                                        EstadoText = "Eliminadas";
+                                        break;
+                                }
+
+                                await GetActividades(EstadoText);
+
+                                //corregir actualizacion de lista. 
+                            }
+
+                        }
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+        }
     }
 }

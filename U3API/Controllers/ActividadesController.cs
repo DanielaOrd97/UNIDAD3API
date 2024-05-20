@@ -163,6 +163,37 @@ namespace U3API.Controllers
             return Ok(GetActividadesEstado(deptid, estado));
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetAllActividades()
+        {
+            var deptIdClaim = User.Claims.FirstOrDefault(x => x.Type == "id");
+
+            if (deptIdClaim == null || !int.TryParse(deptIdClaim.Value, out int deptid))
+            {
+                return Unauthorized();
+            }
+
+            var actividades = Repo.GetAllActWithInclude()
+    .Where(x => (x.Estado == 0 || x.Estado == 1) && (x.IdDepartamento == deptid || x.IdDepartamentoNavigation.IdSuperior == deptid))
+                                .OrderBy(x => x.FechaActualizacion).Select(x => new ActividadDTO
+                                {
+                                    Id = x.Id,
+                                    Titulo = x.Titulo,
+                                    Descripcion = x.Descripcion ?? "",
+                                    IdDepartamento = x.IdDepartamento,
+                                    NombreDepto = x.IdDepartamentoNavigation.Nombre,
+                                    FechaDeRealizacion = x.FechaRealizacion,
+                                    FechaDeCreacion = x.FechaCreacion,
+                                    Estado = x.Estado,
+                                    Imagen = GetImagenBase64(x.Id)
+                                });
+
+
+
+            return Ok(actividades);
+        }
+
         /// <summary>
         /// FILTROS ACTIVIDADES DE ACUERDO A ESTADO Y AL ID DEL DEPARTAMENTO.
         /// </summary>
