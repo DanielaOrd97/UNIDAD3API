@@ -4,8 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClienteWPF.Views"
+             xmlns:converters="clr-namespace:ClienteWPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:ToDateOnlyConverter x:Key="converter"></converters:ToDateOnlyConverter>
+    </UserControl.Resources>
+    
+    
     <Grid>
         <DockPanel Background="#EDE5FF">
             <DockPanel DockPanel.Dock="Top">
@@ -21,9 +28,10 @@
                     <Button Foreground="White"
                      Width="130"
                          Height="50"
-                     Style="{DynamicResource RoundCorner}">Agregar</Button>
+                     Style="{DynamicResource RoundCorner}"
+                             Command="{Binding VerAgregarActividadCommand}"
+                            >Agregar</Button>
                 </Grid>
-
                 <Border></Border>
             </DockPanel>
 
@@ -140,7 +148,20 @@ DockPanel.Dock="Top">De los coordinadores</TextBlock>
 
 
         <!--VISTA PARA AGREGAR O EDITAR LA TAREA LA VISIBILIDAD DEL GRID SE COLAPSA O SE PONE VISIBLE SEGUN LA ACCION QUE TOMES EN LA VISTA ANTERIOR-->
-        <Grid Visibility="Collapsed">
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Modo}" Value="agregar">
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Modo}" Value="regreso">
+                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
             <Grid.Background>
                 <SolidColorBrush Color="#EDE5FF"
                               Opacity=".7"></SolidColorBrush>
@@ -186,7 +207,9 @@ DockPanel.Dock="Top">De los coordinadores</TextBlock>
                                  Margin="0 0 30 0">
                             <Label>Nombre de la tarea</Label>
                             <TextBox Template="{StaticResource TextBoxBaseControlTemplate}"
-                                  VerticalContentAlignment="Center">
+                                  VerticalContentAlignment="Center"
+                                     Text="{Binding Actividad.Titulo}"
+                                     >
                                 <TextBox.Effect>
                                     <DropShadowEffect Direction="0"
                                                    ShadowDepth="0"
@@ -212,9 +235,11 @@ DockPanel.Dock="Top">De los coordinadores</TextBlock>
                             <Label DockPanel.Dock="Top">Texto de la tarea</Label>
                             <TextBox Template="{StaticResource TextBoxBaseControlTemplate}"
                                   AcceptsReturn="True"
-                                  Height="250"
+                                  Height="90"
                                   Padding="5"
-                                  DockPanel.Dock="Top">
+                                  DockPanel.Dock="Top"
+                                     Text="{Binding Actividad.Descripcion}"
+                                     >
                                 <TextBox.Effect>
                                     <DropShadowEffect Direction="0"
                                                    ShadowDepth="0"
@@ -222,12 +247,26 @@ DockPanel.Dock="Top">De los coordinadores</TextBlock>
                                                    Opacity=".3"></DropShadowEffect>
                                 </TextBox.Effect>
                             </TextBox>
+                            <Label DockPanel.Dock="Top">Fecha de realizacion</Label>
+                            <DatePicker DockPanel.Dock="Top" SelectedDate="{Binding Actividad.FechaDeRealizacion, Converter={StaticResource converter}, StringFormat=yy-MM-dd}"
+                                            SelectedDateFormat="Long" 
+                                        Height="30"
+                                        BorderThickness="0.5"
+                                        />
+                            <Label DockPanel.Dock="Top">Estado de la publicacion</Label>
+                            <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding Estados}"
+          SelectedItem="{Binding SelectedEstado}"
+          DisplayMemberPath="Estado"
+          ></ComboBox>
                             <Border></Border>
                         </DockPanel>
 
                         <DockPanel Grid.Column="1"
                                 Margin="5 0 0 0">
-                            <Label DockPanel.Dock="Top">Adjuntar archivos</Label>
+                            <WrapPanel DockPanel.Dock="Top">
+                                <Label>Adjuntar archivos</Label>
+                                <Button Command="{Binding SeleccionarImagenCommand}">Seleccionar Imagen</Button>
+                            </WrapPanel>
                             <Border Height="250"
                                  Background="White"
                                  CornerRadius="5"
@@ -239,14 +278,19 @@ DockPanel.Dock="Top">De los coordinadores</TextBlock>
                                                    BlurRadius="25"
                                                    Opacity=".3"></DropShadowEffect>
                                 </Border.Effect>
+                                <Image Source="{Binding ImagenSeleccionada}" Width="170" Height="180"></Image>
                             </Border>
                             <Border></Border>
                         </DockPanel>
                         <WrapPanel Grid.Row="1"
                                 Grid.Column="1"
                                 HorizontalAlignment="Right">
-                            <Button Foreground="White" Margin="0 0 10 0" Width="130" Height="50" Style="{DynamicResource RoundCorner}">Cancelar</Button>
-                            <Button Foreground="White" Width="130" Height="50" Style="{DynamicResource RoundCorner}">Agregar</Button>
+                            <Button Foreground="White" Margin="0 0 10 0" Width="130" Height="50" Style="{DynamicResource RoundCorner}"
+                                    Command="{Binding RegresarVistaCommand}"
+                                    >Cancelar</Button>
+                            <Button Foreground="White" Width="130" Height="50" Style="{DynamicResource RoundCorner}"
+                                     Command="{Binding AgregarActividadCommand}" CommandParameter="{Binding Actividad}"
+                                    >Agregar</Button>
                         </WrapPanel>
                     </Grid>
                 </Grid>

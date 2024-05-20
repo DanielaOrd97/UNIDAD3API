@@ -260,6 +260,8 @@ namespace U3API.Controllers
             ActividadValidator validator = new();
             var resultados = validator.Validate(dto);
 
+            int.TryParse(deptIdClaim.Value, out int deptid);
+
             if (resultados.IsValid)
             {
                 Actividades entidad = new()
@@ -268,13 +270,13 @@ namespace U3API.Controllers
                     Titulo = dto.Titulo,
                     Descripcion = dto.Descripcion,
                     FechaRealizacion = dto.FechaDeRealizacion,
-                    IdDepartamento = (int)dto.IdDepartamento,
+                    IdDepartamento = deptid,
                     FechaCreacion = DateTime.Now,
                     FechaActualizacion = DateTime.Now,
                     Estado = dto.Estado
                 };
 
-                int.TryParse(deptIdClaim.Value, out int deptid);
+               
 
                 if (entidad.IdDepartamento == deptid)
                 {

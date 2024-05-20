@@ -14,9 +14,9 @@ namespace ClienteWPF.Models.DTOs
         public string Descripcion { get; set; } = null!;
         public string? NombreDepto { get; set; }
         public DateOnly? FechaDeRealizacion { get; set; }
-        public int? IdDepartamento { get; set; }
+        public int IdDepartamento { get; set; }
         public DateTime? FechaDeCreacion { get; set; }
-        public string? Imagen { get; set; }
+        public string? Imagen { get; set; } = null!;
         public BitmapImage? Img { get; set; } = null!;
         public int Estado { get; set; }
         //public string? Error { get; set; }

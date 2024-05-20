@@ -2,6 +2,7 @@
 using ClienteWPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +28,14 @@ namespace ClienteWPF.ViewModels
         [ObservableProperty]
         private Estado selectedEstado;
 
+        [ObservableProperty]
+        private string imagenSeleccionada;
+
         APIService service = new();
+        public int StatusId { get; set; }
+        public string StatusAct { get; set; }
+
+        public List<Estado> Estados => Enum.GetValues(typeof(Estado)).Cast<Estado>().ToList();
         public ObservableCollection<ActividadDTO> ListaActividades { get; set; } = new();
 
         private string modo;
@@ -50,6 +58,7 @@ namespace ClienteWPF.ViewModels
             Mainviewmodel = mainviewmodel;
             Actividad = new();
             service = new();
+            //Modo = "inicio";
         }
 
         [RelayCommand]
@@ -78,5 +87,68 @@ namespace ClienteWPF.ViewModels
             }
         }
 
+        [RelayCommand]
+        public void VerAgregarActividad()
+        {
+            Modo = "agregar";
+        }
+
+        [RelayCommand]
+        public void RegresarVista()
+        {
+            Modo = "regresar";
+        }
+
+        [RelayCommand]
+        public async void AgregarActividad()
+        {
+            if (Actividad != null)
+            {
+                Actividad.Imagen = ConvertirBase64(imagenSeleccionada);
+                Actividad.Estado = (int)SelectedEstado;
+                await service.AgregarActividad(Actividad);
+
+                StatusId = Actividad.Estado;
+
+                switch (StatusId)
+                {
+                    case 0:
+                        StatusAct = "Borrador";
+                        break;
+                    case 1:
+                        StatusAct = "Publicadas";
+                        break;
+                    case 2:
+                        StatusAct = "Eliminadas";
+                        break;
+                }
+
+                GetActividades(StatusAct);
+                Modo = "regresar";
+            }
+        }
+
+        private string ConvertirBase64(string? imagenSeleccionada)
+        {
+            if (imagenSeleccionada != null)
+            {
+                byte[] imageArray = System.IO.File.ReadAllBytes(imagenSeleccionada);
+                return Convert.ToBase64String(imageArray);
+            }
+            return "";
+        }
+
+
+
+        [RelayCommand]
+        public void SeleccionarImagen()
+        {
+            OpenFileDialog openFileDialog = new();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                ImagenSeleccionada = openFileDialog.FileName;
+            }
+        }
     }
 }

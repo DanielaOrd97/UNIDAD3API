@@ -17,6 +17,9 @@ namespace ClienteWPF.Services
     {
         HttpClient cliente;
         public ActividadesRepository Rep;
+        public int Est { get; set; }
+        public string EstadoText { get; set; }
+
 
         public APIService()
         {
@@ -123,5 +126,47 @@ namespace ClienteWPF.Services
 
             return actividadeslista;
         }
+
+        public async Task AgregarActividad(ActividadDTO dto)
+        {
+            //if (string.IsNullOrEmpty(Token))
+            //{
+            //    throw new InvalidOperationException("Usuario no autenticado.");
+            //}
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            try
+            {
+                var response = await cliente.PostAsJsonAsync("actividades/AgregarActividad", dto);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Est = dto.Estado;
+
+                    switch (Est)
+                    {
+                        case 0:
+                            EstadoText = "Borrador";
+                            break;
+                        case 1:
+                            EstadoText = "Publicadas";
+                            break;
+                        case 2:
+                            EstadoText = "Eliminadas";
+                            break;
+                    }
+
+                    await GetActividades(EstadoText);
+                }
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException("Usuario no autenticado.");
+
+            }
+        }
+
+
     }
 }
