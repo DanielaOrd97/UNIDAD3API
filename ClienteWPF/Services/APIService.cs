@@ -301,5 +301,47 @@ namespace ClienteWPF.Services
                 }
             }
         }
+
+        public async Task EliminarActividad(int idAct)
+        {
+            if(idAct != 0)
+            {
+                if (string.IsNullOrEmpty(Token))
+                {
+                    throw new InvalidOperationException("Usuario no autenticado.");
+                }
+
+                cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+                try
+                {
+                    var response = await cliente.DeleteAsync($"actividades/EliminarActividad/{idAct}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var act = Rep.Get((int)idAct);
+
+                        Est = act.Estado;
+
+                        switch (Est)
+                        {
+                            case 0:
+                                EstadoText = "Borrador";
+                                break;
+                            case 1:
+                                EstadoText = "Publicadas";
+                                break;
+                        }
+
+                        await GetActividades(EstadoText);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
     }
 }

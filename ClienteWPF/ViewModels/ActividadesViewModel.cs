@@ -1,4 +1,5 @@
 ﻿using ClienteWPF.Models.DTOs;
+using ClienteWPF.Repositories;
 using ClienteWPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -32,6 +33,7 @@ namespace ClienteWPF.ViewModels
         private string imagenSeleccionada;
 
         APIService service = new();
+        ActividadesRepository repo;
         public int StatusId { get; set; }
         public string StatusAct { get; set; }
 
@@ -77,6 +79,7 @@ namespace ClienteWPF.ViewModels
             Mainviewmodel = mainviewmodel;
             Actividad = new();
             service = new();
+            repo = new();
             //Modo = "inicio";
         }
 
@@ -238,6 +241,40 @@ namespace ClienteWPF.ViewModels
                 GetActividades(StatusAct);
                 Modo = "regresar";
             }
+        }
+
+        [RelayCommand]
+        public async Task EliminarActividad()
+        {
+            if (Actividad != null)
+            {
+                await service.EliminarActividad((int)Actividad.Id);
+
+                var act = repo.Get(Actividad.Id);
+                StatusId = act.Estado;
+
+                switch (StatusId)
+                {
+                    case 0:
+                        StatusAct = "Borrador";
+                        break;
+                    case 1:
+                        StatusAct = "Publicadas";
+                        break;
+                    case 2:
+                        StatusAct = "Eliminadas";
+                        break;
+                }
+
+                GetActividades(StatusAct);
+                Modo = "regresar";
+            }
+        }
+
+        [RelayCommand]
+        public void VerEliminar()
+        {
+            Modo = "eliminar";
         }
 
         private string ConvertirBase64(string? imagenSeleccionada)

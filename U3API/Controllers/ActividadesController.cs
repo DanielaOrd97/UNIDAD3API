@@ -399,7 +399,7 @@ namespace U3API.Controllers
                 entidadAct.Estado = 2;
                 entidadAct.FechaActualizacion = DateTime.Now;
                 Repo.Update(entidadAct);
-                return Ok();
+                return Ok(entidadAct.Estado);
             }
 
             return BadRequest("La actividad que desea eliminar no es correspondiente a su departamento.");
