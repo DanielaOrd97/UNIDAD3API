@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using System.Text;
 using U3API.Models.DTOs;
 using U3API.Models.Entities;
 using U3API.Models.Validators;
@@ -37,7 +39,7 @@ namespace U3API.Controllers
 
             if(departamento.IdSuperior == null)
             {
-                var deptos = Repository.GetAll().
+                var deptos = Repository.GetAll().Where(x => x.IdSuperior == deptid).
                           OrderBy(x => x.Id).
                           Select(x => new DepartamentoDTO
                           {
@@ -82,7 +84,7 @@ namespace U3API.Controllers
                         Id = 0,
                         Nombre = dto.NombreDepartamento,
                         Username = dto.Username,
-                        Password = dto.Password,
+                        Password = ConvertPasswordToSHA512(dto.Password),
                         IdSuperior = dto.IdSuperior
                     };
 
@@ -96,6 +98,15 @@ namespace U3API.Controllers
             return Unauthorized("No eres administrador");
         }
 
+        private static string ConvertPasswordToSHA512(string password)
+        {
+            using (var sha512 = SHA512.Create())
+            {
+                var arreglo = Encoding.UTF8.GetBytes(password);
+                var hash = sha512.ComputeHash(arreglo);
+                return Convert.ToHexString(hash).ToLower();
+            }
+        }
 
         [HttpPut("{id}")]
         public IActionResult Put(DepartamentoDTO dto)

@@ -27,8 +27,8 @@ namespace ClienteWPF.Services
         {
             cliente = new()
             {
-                 //BaseAddress = new Uri("https://localhost:44326/api/")
-                BaseAddress = new Uri("https://actividadesequipo8.websitos256.com/api/")
+                 BaseAddress = new Uri("https://localhost:44326/api/")
+                 //BaseAddress = new Uri("https://actividadesequipo8.websitos256.com/api/")
             };
 
             Rep = new ActividadesRepository();
@@ -185,6 +185,26 @@ namespace ClienteWPF.Services
             }
 
             return actividadeslista;
+        }
+
+        public async Task AgregarDepartamento(DepartamentoDTO dto)
+        {
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            try
+            {
+                var response = await cliente.PostAsJsonAsync("departamentos", dto);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    await GetAllDepartamentos();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task AgregarActividad(ActividadDTO dto)

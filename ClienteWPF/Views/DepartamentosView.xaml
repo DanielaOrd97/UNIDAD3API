@@ -310,7 +310,7 @@ DockPanel.Dock="Top">De los coordinadores</TextBlock>
         <Grid>
             <Grid.Style>
                 <Style TargetType="Grid">
-                    <Setter Property="Visibility" Value="Visible"></Setter>
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Modo}" Value="agregardepto">
                             <Setter Property="Visibility" Value="Visible"></Setter>
@@ -401,8 +401,10 @@ VerticalContentAlignment="Center"
                                 </TextBox.Effect>
                             </TextBox>
                             <Label>Departamento superior</Label>
-                            <ComboBox ItemsSource="{Binding ListaDAgregar}"
-                                      SelectedItem="{Binding Departamento.Id}"
+                            <ComboBox ItemsSource="{Binding ListaDepartamentos}"
+                                      SelectedValue="{Binding Departamento.Id}"
+                                      DisplayMemberPath="NombreDepartamento"
+                                      SelectedValuePath="Id"
                                       ></ComboBox>
 
                             <WrapPanel Grid.Row="1"

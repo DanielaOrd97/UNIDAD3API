@@ -28,14 +28,8 @@ namespace ClienteWPF.ViewModels
         }
 
         public ObservableCollection<DepartamentoDTO> ListaDepartamentos{ get; set; } = new();
-        public ObservableCollection<string> ListaDAgregar { get; set; } = new();
-        //private ObservableCollection<string> _listaDAgregar;
-
-        //public ObservableCollection<string> ListaDAgregar
-        //{
-        //    get => _listaDAgregar;
-        //    set => SetProperty(ref _listaDAgregar, value);
-        //}
+        //public ObservableCollection<string> ListaDAgregar { get; set; } = new();
+       
 
 
 
@@ -43,7 +37,8 @@ namespace ClienteWPF.ViewModels
         {
             Mainviewmodel = mainviewm;
             service = new();
-           // GetAllDeptos();
+            // GetAllDeptos();
+            Departamento = new();
         }
 
         [RelayCommand]
@@ -60,18 +55,31 @@ namespace ClienteWPF.ViewModels
         }
 
         [RelayCommand]
+        public void RegresarVista()
+        {
+            Departamento = null;
+            Modo = "regresar";
+        }
+
+        [RelayCommand]
         public async Task GetAllDeptos()
         {
             ListaDepartamentos.Clear();
-            ListaDAgregar.Clear();
+            //ListaDAgregar.Clear();
 
             var response = await service.GetAllDepartamentos();
 
             foreach (var dept in response)
             {
                 ListaDepartamentos.Add(dept);
-                ListaDAgregar.Add(dept.NombreDepartamento);
             }
+            ListaDepartamentos.Add(new DepartamentoDTO
+            {
+                NombreDepartamento = "Ninguno",
+                Username = null,
+                Password = null,
+                IdSuperior = null
+            });
         }
 
         // void Llenarminilista()
@@ -90,10 +98,11 @@ namespace ClienteWPF.ViewModels
         {
             if(Departamento != null)
             {
-                
-
-
+                Departamento.IdSuperior = Departamento.Id;
+                await service.AgregarDepartamento(Departamento);
             }
+            Modo = "regresar";
+            GetAllDeptos();
         }
     }
 }
