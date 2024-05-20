@@ -22,6 +22,7 @@ namespace U3API.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetAllDepartamentos()
         {
 
@@ -54,6 +55,7 @@ namespace U3API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Post(DepartamentoDTO dto)
         {
 
@@ -116,7 +118,7 @@ namespace U3API.Controllers
 
                 if (resultados.IsValid)
                 {
-                    var entidadDept = Repository.Get(dto.Id ?? 0);
+                    var entidadDept = Repository.Get(dto.Id);
 
                     if (entidadDept == null)
                     {

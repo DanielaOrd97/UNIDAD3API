@@ -45,8 +45,17 @@ namespace ClienteWPF.ViewModels
 
                  if(response.Errores == null)
                  {
-                    esAdmin = response.EsAdmin;
-                    Mainviewmodel.NavegarActividades();
+                    EsAdmin = response.EsAdmin;
+
+                    //dirigir a deptos
+                    if(EsAdmin == true)
+                    {
+                        Mainviewmodel.NavegarDepartamentos();
+                    }
+                    else
+                    {
+                        Mainviewmodel.NavegarActividades();
+                    }
                  }
                 else
                 {

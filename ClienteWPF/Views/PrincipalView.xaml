@@ -20,6 +20,9 @@
         <DataTemplate DataType="{x:Type vm:ActividadesViewModel}">
             <views:ActividadesView></views:ActividadesView>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DepartamentosViewModel}">
+            <views:DepartamentosView></views:DepartamentosView>
+        </DataTemplate>
     </Window.Resources>
 
 

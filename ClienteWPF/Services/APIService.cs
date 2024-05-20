@@ -18,6 +18,7 @@ namespace ClienteWPF.Services
     {
         HttpClient cliente;
         public ActividadesRepository Rep;
+        public DeptosRepository RepD;
         public int Est { get; set; }
         public string EstadoText { get; set; }
 
@@ -26,11 +27,12 @@ namespace ClienteWPF.Services
         {
             cliente = new()
             {
-                 BaseAddress = new Uri("https://localhost:44326/api/")
-                //BaseAddress = new Uri("https://actividadesequipo8.websitos256.com/api/")
+                 //BaseAddress = new Uri("https://localhost:44326/api/")
+                BaseAddress = new Uri("https://actividadesequipo8.websitos256.com/api/")
             };
 
             Rep = new ActividadesRepository();
+            RepD = new DeptosRepository();
         }
         public static string? Token { get; set; }
 
@@ -342,6 +344,50 @@ namespace ClienteWPF.Services
                     throw;
                 }
             }
+        }
+
+        public async Task<List<DepartamentoDTO>> GetAllDepartamentos()
+        {
+            List<DepartamentoDTO> deptoslista = new();
+
+
+            if (string.IsNullOrEmpty(Token))
+            {
+                throw new InvalidOperationException("Usuario no autenticado.");
+            }
+
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+
+            var response = await cliente.GetAsync($"departamentos");
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var departamentos = JsonConvert.DeserializeObject<List<DepartamentoDTO>>(jsonResponse);
+
+
+            if (departamentos != null)
+            {
+                foreach (DepartamentoDTO dept in departamentos)
+                {
+                    //var entidad = Rep.Get(act.Id);
+                    var entidad = RepD.Get((int)dept.Id);
+
+                    if (entidad != null)
+                    {
+                        DepartamentoDTO dto = new()
+                        {
+                           Id = dept.Id,
+                           NombreDepartamento = dept.NombreDepartamento,
+                           Username = dept.Username,
+                           IdSuperior = dept.IdSuperior
+                        };
+
+                        deptoslista.Add(dto);
+                    }
+                }
+
+            }
+
+            return deptoslista;
         }
     }
 }

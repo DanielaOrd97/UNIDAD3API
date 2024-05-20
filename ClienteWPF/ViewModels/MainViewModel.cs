@@ -14,6 +14,9 @@ namespace ClienteWPF.ViewModels
 
         private readonly LogInViewModel loginviewmodel;
         private readonly ActividadesViewModel actviewmodel;
+        private readonly DepartamentosViewModel deptviewmodel;
+
+
 
         private string modo;
         public string Modo
@@ -40,6 +43,7 @@ namespace ClienteWPF.ViewModels
         {
             loginviewmodel = new LogInViewModel(this);
             actviewmodel = new ActividadesViewModel(this);
+            deptviewmodel = new DepartamentosViewModel(this);
 
             //Modo = "login";
             ViewModelAactual = loginviewmodel;
@@ -49,6 +53,12 @@ namespace ClienteWPF.ViewModels
         public void NavegarLogIn()
         {
             ViewModelAactual = loginviewmodel;
+        }
+
+        public void NavegarDepartamentos()
+        {
+            ViewModelAactual = deptviewmodel;
+            deptviewmodel.GetAllDeptos();
         }
 
         public void NavegarActividades()
