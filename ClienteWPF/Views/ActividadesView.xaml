@@ -5,9 +5,280 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClienteWPF.Views"
              mc:Ignorable="d" 
-              Background="Pink"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Label>Hola act!</Label>
+        <DockPanel Background="#EDE5FF">
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock FontWeight="Black"
+            Foreground="#352f36"
+            FontFamily="../Assets/#Gotham Black"
+                        VerticalAlignment="Center"
+            Margin="10"
+            FontSize="20"
+            DockPanel.Dock="Left">Lista de actividades</TextBlock>
+                <Grid DockPanel.Dock="Right"
+                   Margin="0 0 10 0">
+                    <Button Foreground="White"
+                     Width="130"
+                         Height="50"
+                     Style="{DynamicResource RoundCorner}">Agregar</Button>
+                </Grid>
+
+                <Border></Border>
+            </DockPanel>
+
+            <Border DockPanel.Dock="Top"
+         Margin="10 0"
+         BorderBrush="#352f36"
+         BorderThickness="1"></Border>
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <!--<ColumnDefinition Width="1*"></ColumnDefinition>-->
+                </Grid.ColumnDefinitions>
+                <DockPanel>
+                    <TextBlock FontWeight="Black"
+            Foreground="#352f36"
+            FontFamily="../Assets/#Gotham Black"
+            Margin="10"
+            FontSize="20"
+            DockPanel.Dock="Top">En borrador</TextBlock>
+                    <Button DockPanel.Dock="Top"
+                            Content="Publicadas" Margin="0,0,10,0"
+                        Command="{Binding GetActividadesCommand}"
+                        CommandParameter="Publicadas"
+                            ></Button>
+                    <ListView BorderThickness="0"
+                   Background="Transparent"
+                              SelectedItem="{Binding Act}"
+                 ItemsSource="{Binding ListaActividades}"
+                              >
+                        <!--<ListViewItem Height="235"
+                           Background="Gray"
+                           Margin="0 0 0 8">
+                            <StackPanel Background="White" Margin="0,0,15,10" Width="170">
+                                <TextBlock Text="{Binding Titulo}"></TextBlock>
+                                <TextBlock Text="{Binding Descripcion}"></TextBlock>
+                                <TextBlock Text="{Binding FechaDeRealizacion}"></TextBlock>
+                                <TextBlock Text="{Binding NombreDepto}"></TextBlock>
+                                <TextBlock Text="{Binding Estado}"></TextBlock>
+                                <Image Source="{Binding Img}" Height="100" Width="100"></Image>
+                                <WrapPanel>
+                                    <Button  Command="{Binding DataContext.VerEditarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding .}">Editar</Button>
+                                    <Button>Eliminar</Button>
+                                </WrapPanel>
+                            </StackPanel>
+                        </ListViewItem>-->
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Background="Gray" Margin="0,0,15,10" Width="170">
+                                    <TextBlock Text="{Binding Titulo}"></TextBlock>
+                                    <TextBlock Text="{Binding Descripcion}"></TextBlock>
+                                    <TextBlock Text="{Binding FechaDeRealizacion}"></TextBlock>
+                                    <TextBlock Text="{Binding NombreDepto}"></TextBlock>
+                                    <TextBlock Text="{Binding Estado}"></TextBlock>
+                                    <Image Source="{Binding Img}" Height="100" Width="100"></Image>
+                                    <WrapPanel>
+                                        <Button  Command="{Binding DataContext.VerEditarCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding .}">Editar</Button>
+                                        <Button>Eliminar</Button>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <!--<ListViewItem Height="35"
+                           Background="Gray"
+                           Margin="0 0 0 8"></ListViewItem>-->
+                    </ListView>
+                </DockPanel>
+
+                <DockPanel Grid.Column="1">
+                    <TextBlock FontWeight="Black"
+Foreground="#352f36"
+FontFamily="../Assets/#Gotham Black"
+Margin="10"
+FontSize="20"
+DockPanel.Dock="Top">Publicadas</TextBlock>
+                    <ListView BorderThickness="0"
+       Background="Transparent">
+
+                        <!--Con el evendo de doble clic se deberia de abrir en la vista que esta mas abajo en este archivo, solo tiene visibility collapsed-->
+                        <ListViewItem Height="35"
+                                   
+               Background="Gray"
+                                   Foreground="White"
+                                   FontWeight="SemiBold"
+                                   FontSize="15"
+                                   
+               Margin="0 0 0 8">Titulo de la nota</ListViewItem>
+                        <ListViewItem Height="35"
+               Background="Gray"
+               Margin="0 0 0 8"></ListViewItem>
+                    </ListView>
+                </DockPanel>
+
+                <!--<DockPanel Grid.Column="2">
+                 <TextBlock FontWeight="Black"
+Foreground="#352f36"
+FontFamily="../Assets/#Gotham Black"
+Margin="10"
+FontSize="20"
+DockPanel.Dock="Top">De los coordinadores</TextBlock>
+                 <ListView BorderThickness="0"
+       Background="Transparent">
+                     <ListViewItem Height="35"
+               Background="Gray"
+               Margin="0 0 0 8"></ListViewItem>
+                     <ListViewItem Height="35"
+               Background="Gray"
+               Margin="0 0 0 8"></ListViewItem>
+                 </ListView>
+             </DockPanel>-->
+            </Grid>
+
+        </DockPanel>
+
+
+        <!--VISTA PARA AGREGAR O EDITAR LA TAREA LA VISIBILIDAD DEL GRID SE COLAPSA O SE PONE VISIBLE SEGUN LA ACCION QUE TOMES EN LA VISTA ANTERIOR-->
+        <Grid Visibility="Collapsed">
+            <Grid.Background>
+                <SolidColorBrush Color="#EDE5FF"
+                              Opacity=".7"></SolidColorBrush>
+            </Grid.Background>
+            <Border CornerRadius="20"
+                 Margin="30"
+                 VerticalAlignment="Center"
+                 Background="#f8f5ff">
+                <Border.Resources>
+                    <Style TargetType="Label">
+                        <Setter Property="FontSize" Value="17"></Setter>
+                        <Setter Property="FontFamily" Value="../Assets/#Gotham"></Setter>
+                        <Setter Property="Margin" Value="0 0 0 5"></Setter>
+                    </Style>
+                </Border.Resources>
+                <Border.Effect>
+                    <DropShadowEffect Direction="0"
+                ShadowDepth="0"
+                BlurRadius="25"
+                Opacity=".7"></DropShadowEffect>
+                </Border.Effect>
+                <Grid Margin="10 0 10 10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <DockPanel>
+                        <Border Width="50"
+                             Margin="0 20 0 0"
+                             DockPanel.Dock="Right">
+                            <Image Source="../Assets/basura.png"
+                                RenderOptions.BitmapScalingMode="Fant"
+                                Width="25">
+                                <Image.Effect>
+                                    <DropShadowEffect Direction="0"
+                                                   ShadowDepth="0"
+                                                   BlurRadius="25"
+                                                   Opacity=".7"></DropShadowEffect>
+                                </Image.Effect>
+                            </Image>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center"
+                                 Margin="0 0 30 0">
+                            <Label>Nombre de la tarea</Label>
+                            <TextBox Template="{StaticResource TextBoxBaseControlTemplate}"
+                                  VerticalContentAlignment="Center">
+                                <TextBox.Effect>
+                                    <DropShadowEffect Direction="0"
+                                                   ShadowDepth="0"
+                                                   BlurRadius="25"
+                                                   Opacity=".1"></DropShadowEffect>
+                                </TextBox.Effect>
+                            </TextBox>
+                        </StackPanel>
+
+                    </DockPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel Margin="0 0 5 0">
+                            <Label DockPanel.Dock="Top">Texto de la tarea</Label>
+                            <TextBox Template="{StaticResource TextBoxBaseControlTemplate}"
+                                  AcceptsReturn="True"
+                                  Height="250"
+                                  Padding="5"
+                                  DockPanel.Dock="Top">
+                                <TextBox.Effect>
+                                    <DropShadowEffect Direction="0"
+                                                   ShadowDepth="0"
+                                                   BlurRadius="25"
+                                                   Opacity=".3"></DropShadowEffect>
+                                </TextBox.Effect>
+                            </TextBox>
+                            <Border></Border>
+                        </DockPanel>
+
+                        <DockPanel Grid.Column="1"
+                                Margin="5 0 0 0">
+                            <Label DockPanel.Dock="Top">Adjuntar archivos</Label>
+                            <Border Height="250"
+                                 Background="White"
+                                 CornerRadius="5"
+                                  Padding="5"
+                                  DockPanel.Dock="Top">
+                                <Border.Effect>
+                                    <DropShadowEffect Direction="0"
+                                                   ShadowDepth="0"
+                                                   BlurRadius="25"
+                                                   Opacity=".3"></DropShadowEffect>
+                                </Border.Effect>
+                            </Border>
+                            <Border></Border>
+                        </DockPanel>
+                        <WrapPanel Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right">
+                            <Button Foreground="White" Margin="0 0 10 0" Width="130" Height="50" Style="{DynamicResource RoundCorner}">Cancelar</Button>
+                            <Button Foreground="White" Width="130" Height="50" Style="{DynamicResource RoundCorner}">Agregar</Button>
+                        </WrapPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--VISTA PARA ELIMINAR LA TAREA LA VISIBILIDAD DEL GRID SE COLAPSA O SE PONE VISIBLE SEGUN LA ACCION QUE TOMES EN LA VISTA ANTERIOR-->
+        <Grid Visibility="Collapsed">
+            <Border CornerRadius="20" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#f8f5ff">
+                <Border.Effect>
+                    <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="25" Opacity=".7"></DropShadowEffect>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock HorizontalAlignment="Center"
+                        FontWeight="Black"
+                        Foreground="#352f36"
+                        FontFamily="../Assets/#Gotham Black"
+                        Margin="10"
+                        FontSize="20">¿Esta seguro de eliminar esta tarea?</TextBlock>
+                    <WrapPanel Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Center">
+                        <Button Foreground="White" Margin="0 0 10 0" Width="130" Height="50" Style="{DynamicResource RoundCorner}">Cancelar</Button>
+                        <Button Foreground="White" Width="130" Height="50" Style="{DynamicResource RoundCorner}">Aceptar</Button>
+                    </WrapPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
     </Grid>
 </UserControl>

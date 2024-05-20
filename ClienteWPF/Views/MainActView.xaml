@@ -43,7 +43,7 @@
             FontFamily="../Assets/#Gotham Black"
             Margin="10"
             FontSize="20"
-            DockPanel.Dock="Top">Tus actividades</TextBlock>
+            DockPanel.Dock="Top">En borrador</TextBlock>
                     <ListView BorderThickness="0"
                    Background="Transparent">
                         <ListViewItem Height="35"
@@ -61,7 +61,7 @@ Foreground="#352f36"
 FontFamily="../Assets/#Gotham Black"
 Margin="10"
 FontSize="20"
-DockPanel.Dock="Top">Departamentos subordinados</TextBlock>
+DockPanel.Dock="Top">Publicadas</TextBlock>
                     <ListView BorderThickness="0"
        Background="Transparent">
 

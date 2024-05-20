@@ -14,7 +14,7 @@ namespace ClienteWPF.ViewModels
     public partial class LogInViewModel:ObservableObject
     {
         [ObservableProperty]
-        private LogInDTO login;
+         LogInDTO login;
 
         [ObservableProperty]
         private bool? esAdmin;
