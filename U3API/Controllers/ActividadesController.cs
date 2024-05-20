@@ -368,7 +368,7 @@ namespace U3API.Controllers
                         actividad.Estado = dto.Estado;
 
                         Repo.Update(actividad);
-                        return Ok();
+                        return Ok(actividad);
                     }
 
                     return BadRequest("El departamento no es el correspondiente");

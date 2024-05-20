@@ -264,56 +264,60 @@ namespace ClienteWPF.Services
 
                     if (response != null && response.IsSuccessStatusCode)
                     {
-                        var entidad = Rep.Get((int)dto.Id);
 
-                        if (entidad != null)
-                        {
-                            if (dto.Titulo != entidad.Titulo || dto.Descripcion != entidad.Descripcion || dto.FechaDeRealizacion != entidad.FechaRealizacion)
-                            {
+                        await GetAllActividades();                                 
+                                                           
+                        ///var entidad = Rep.Get((int)dto.Id);
 
-                                if(dto.Estado != entidad.Estado)
-                                {
-                                    Est = entidad.Estado;
+                        //if (entidad != null)
+                        //{
+                        //    if (dto.Titulo != entidad.Titulo || dto.Descripcion != entidad.Descripcion || dto.FechaDeRealizacion != entidad.FechaRealizacion || dto.Estado != entidad.Estado)
+                        //    {
 
-                                    switch (Est)
-                                    {
-                                        case 0:
-                                            EstadoText = "Borrador";
-                                            break;
-                                        case 1:
-                                            EstadoText = "Publicadas";
-                                            break;
-                                        case 2:
-                                            EstadoText = "Eliminadas";
-                                            break;
-                                    }
+                        //        Rep.Update(entidad);
 
-                                    await GetActividades(EstadoText);
-                                }
+                        //        if (dto.Estado != entidad.Estado)
+                        //        {
+                        //            Est = entidad.Estado;
 
-                                Rep.Update(entidad);
+                        //            switch (Est)
+                        //            {
+                        //                case 0:
+                        //                    EstadoText = "Borrador";
+                        //                    break;
+                        //                case 1:
+                        //                    EstadoText = "Publicadas";
+                        //                    break;
+                        //                case 2:
+                        //                    EstadoText = "Eliminadas";
+                        //                    break;
+                        //            }
 
-                                Est = dto.Estado;
+                        //            await GetActividades(EstadoText);
+                        //        }
 
-                                switch (Est)
-                                {
-                                    case 0:
-                                        EstadoText = "Borrador";
-                                        break;
-                                    case 1:
-                                        EstadoText = "Publicadas";
-                                        break;
-                                    case 2:
-                                        EstadoText = "Eliminadas";
-                                        break;
-                                }
+                        //        //Rep.Update(entidad);
 
-                                await GetActividades(EstadoText);
+                        //        Est = dto.Estado;
 
-                                //corregir actualizacion de lista. 
-                            }
+                        //        switch (Est)
+                        //        {
+                        //            case 0:
+                        //                EstadoText = "Borrador";
+                        //                break;
+                        //            case 1:
+                        //                EstadoText = "Publicadas";
+                        //                break;
+                        //            case 2:
+                        //                EstadoText = "Eliminadas";
+                        //                break;
+                        //        }
 
-                        }
+                        //        await GetActividades(EstadoText);
+
+                          //  }
+
+                     //   }
                     }
 
                 }
@@ -341,21 +345,22 @@ namespace ClienteWPF.Services
 
                     if (response.IsSuccessStatusCode)
                     {
-                        var act = Rep.Get((int)idAct);
+                        //var act = Rep.Get((int)idAct);
 
-                        Est = act.Estado;
+                        //Est = act.Estado;
 
-                        switch (Est)
-                        {
-                            case 0:
-                                EstadoText = "Borrador";
-                                break;
-                            case 1:
-                                EstadoText = "Publicadas";
-                                break;
-                        }
+                        //switch (Est)
+                        //{
+                        //    case 0:
+                        //        EstadoText = "Borrador";
+                        //        break;
+                        //    case 1:
+                        //        EstadoText = "Publicadas";
+                        //        break;
+                        //}
 
-                        await GetActividades(EstadoText);
+                        //await GetActividades(EstadoText);
+                        await GetAllActividades();
                     }
                 }
                 catch (Exception)

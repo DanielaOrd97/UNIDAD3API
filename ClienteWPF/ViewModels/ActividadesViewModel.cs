@@ -36,6 +36,8 @@ namespace ClienteWPF.ViewModels
         ActividadesRepository repo;
         public int StatusId { get; set; }
         public string StatusAct { get; set; }
+        public string StatusAct1 { get; set; }
+
 
         public List<Estado> Estados => Enum.GetValues(typeof(Estado)).Cast<Estado>().ToList();
         public ObservableCollection<ActividadDTO> ListaActividades { get; set; } = new();
@@ -221,6 +223,8 @@ namespace ClienteWPF.ViewModels
         {
             if (dto != null)
             {
+                int estadoanterior = dto.Estado;
+
                 dto.Estado = (int)SelectedEstado;
                 await service.ActualizarActividad(dto);
                 StatusId = dto.Estado;
@@ -238,8 +242,22 @@ namespace ClienteWPF.ViewModels
                         break;
                 }
 
-                GetActividades(StatusAct);
+                switch (estadoanterior)
+                {
+                    case 0:
+                        StatusAct1 = "Borrador";
+                        break;
+                    case 1:
+                        StatusAct1 = "Publicadas";
+                        break;
+                    case 2:
+                        StatusAct1 = "Eliminadas";
+                        break;
+                }
+
+              await GetActividades(StatusAct);
                 Modo = "regresar";
+              await GetActividades(StatusAct1);
             }
         }
 
